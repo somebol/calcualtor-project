@@ -17,7 +17,8 @@ public class CalculatorService {
 				.sorted(Comparator.reverseOrder())
 				.limit(3)
 				.map(i -> i * i)
-				.reduce((a, b) -> a + b).map(sum -> Math.sqrt(sum))
+				.reduce((a, b) -> a + b)
+				.map(sum -> Math.sqrt(sum))
 				.orElseThrow(() -> new IllegalArgumentException("Invalid arguements"));
 
 		return formatter.format(result);

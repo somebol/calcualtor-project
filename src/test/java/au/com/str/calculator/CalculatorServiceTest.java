@@ -14,6 +14,7 @@ public class CalculatorServiceTest {
 		CalculatorService service = new CalculatorService();
 		
 		String result = service.compute(Arrays.asList(new Integer[] {5,4,6,1}));
+		System.out.println(result);
 		assertEquals("8.77", result);
 	}
 

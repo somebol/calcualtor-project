@@ -29,23 +29,32 @@ public class SimpleController {
 			return ResponseEntity.badRequest().body(buildError("empty input"));
 		}
 		
-		if (!inputData.isArray()) {
-			return ResponseEntity.badRequest().body(buildError("expected array as input"));
+		if (!inputData.isObject()) {
+			return ResponseEntity.badRequest().body(buildError("expected json object as input"));
 		}
 		
-		if (inputData.size() < 3) {
+		if (!inputData.hasNonNull("data")) {
+			return ResponseEntity.badRequest().body(buildError("expected json element 'data'"));
+		}
+		
+		JsonNode data = inputData.get("data");
+		if (!data.isArray()) {
+			return ResponseEntity.badRequest().body(buildError("expected json element 'data' as array"));
+		}
+		
+		if (data.size() < 3) {
 			return ResponseEntity.badRequest().body(buildError("expected atleast 3 elements in request"));
 		}
 		
 		try {
-			ArrayNode arrayInput = (ArrayNode) inputData;
+			ArrayNode arrayInput = (ArrayNode) data;
 			List<Integer> numbers = new ArrayList<>();
 			arrayInput.forEach(node -> numbers.add(Integer.parseInt(node.asText())));
 			
 			String result = calculator.compute(numbers);
 			
 			HashMap<String, String> response = new HashMap<>();
-			response.put("result", result);
+			response.put("output", result);
 			
 			return ResponseEntity.ok(response);
 		} catch(NumberFormatException e) {
